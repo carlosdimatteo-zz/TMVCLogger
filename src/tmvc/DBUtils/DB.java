@@ -9,7 +9,7 @@ import java.sql.SQLException;
 
 public class DB {
 
-   private Props prop = Props.getInstance("dbProp");
+   private Props prop = Props.getDBPropsInstance();
     private static Connection con = null;
     private static DB ins = null;
 
@@ -24,11 +24,13 @@ public class DB {
         }
     }
 
-    private void insertLog(String level,String message) {
+    public void insertLog(String level,String message,String className,String methodName) {
         try {
-        PreparedStatement prepStatement = con.prepareStatement("INSERT INTO log (level,message) VALUES(?,?)");
+        PreparedStatement prepStatement = con.prepareStatement("INSERT INTO log (level,message,class,method) VALUES(?,?,?,?)");
             prepStatement.setString(1,level);
             prepStatement.setString(2,message);
+            prepStatement.setString(3,className);
+            prepStatement.setString(4,methodName);
             prepStatement.execute();
         } catch (SQLException e) {
             e.printStackTrace();

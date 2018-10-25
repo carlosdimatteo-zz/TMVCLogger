@@ -28,7 +28,9 @@ public class Props {
         Set<String> propSet = properties.stringPropertyNames();
         for (String propKey : propSet) {
             if (path == "./../../../../log.properties") {
-                logPropMap.put(propKey, Boolean.parseBoolean(properties.getProperty(propKey)));
+                if(propKey!="fileSize") {
+                    logPropMap.put(propKey, Boolean.parseBoolean(properties.getProperty(propKey)));
+                }
             } else {
 
                 DBPropMap.put(propKey,Boolean.parseBoolean(properties.getProperty(propKey)));
@@ -72,7 +74,7 @@ public class Props {
 
     }
 
-    public HashMap getLogPropMap(String propType){
+    public HashMap getLogPropMap(){
         return logPropMap;
 
     }
