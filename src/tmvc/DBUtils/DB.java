@@ -1,4 +1,4 @@
-package org.tmvc.DBUtils;
+package tmvc.DBUtils;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
