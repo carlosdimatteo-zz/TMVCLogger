@@ -62,7 +62,7 @@ public class TMVCLogger implements LoggerInterface {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
+            return false;
         }else{
             return true;
         }
