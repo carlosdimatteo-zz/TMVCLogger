@@ -6,6 +6,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class DB {
 
@@ -26,11 +28,13 @@ public class DB {
 
     public void insertLog(String level,String message,String className,String methodName) {
         try {
-        PreparedStatement prepStatement = con.prepareStatement("INSERT INTO log (level,message,class,method) VALUES(?,?,?,?)");
+        PreparedStatement prepStatement = con.prepareStatement("INSERT INTO log (level,message,class,method,date) VALUES(?,?,?,?,?)");
             prepStatement.setString(1,level);
             prepStatement.setString(2,message);
             prepStatement.setString(3,className);
             prepStatement.setString(4,methodName);
+            String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
+            prepStatement.setString(5,timeStamp);
             prepStatement.execute();
         } catch (SQLException e) {
             e.printStackTrace();

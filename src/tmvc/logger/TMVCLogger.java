@@ -4,7 +4,10 @@ import tmvc.DBUtils.DB;
 import tmvc.DBUtils.Props;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 
 public class TMVCLogger implements LoggerInterface {
@@ -40,13 +43,18 @@ public class TMVCLogger implements LoggerInterface {
     @Override
     public void textLog(String level,String message, String className, String methodName) {
         File logFile = new File(getCurrentFile());
-        if(checkFileSize(logFile)){
-            // append String to current file
-        }else{
-            // update current file and append to that one must be path+log
+        if(!checkFileSize(logFile)) {
             logFile = new File(getCurrentFile());
-
-
+        }
+        try {
+            FileWriter fileWriter = new FileWriter(logFile);
+            String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
+            fileWriter.write(timeStamp+"-- Class :"+className+"-- Method: "+methodName+" -- Level: "+level
+                    +"-- Message: "+message);
+            fileWriter.flush();
+            fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
