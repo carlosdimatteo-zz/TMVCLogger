@@ -10,6 +10,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
+import javax.jws.WebService;
+
+@WebService(endpointInterface = "tmvc.logger.LoggerInterface")
+
 public class TMVCLogger implements LoggerInterface {
     private String path = "./../../../../";
     private String fileName = "Log";
@@ -89,3 +93,4 @@ public class TMVCLogger implements LoggerInterface {
 
 
 }
+

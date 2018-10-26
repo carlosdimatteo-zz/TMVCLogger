@@ -10,4 +10,8 @@
             name='WebServiceLogger'
             implementation='tmvc.WebServiceLogger'
             url-pattern='/services/WebServiceLogger'/>
+    <endpoint
+            name='TMVCLogger'
+            implementation='tmvc.logger.TMVCLogger'
+            url-pattern='/services/TMVCLogger'/>
 </endpoints>
