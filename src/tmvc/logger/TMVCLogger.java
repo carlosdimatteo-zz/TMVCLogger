@@ -62,8 +62,7 @@ public class TMVCLogger implements LoggerInterface {
         }
     }
 
-    @Override
-    public boolean checkFileSize(File file) {
+    private boolean checkFileSize(File file) {
         int size = Integer.parseInt(Props.getLogPropsInstance().getProp("fileSize"));
         if(file.length() >= size){
             this.counter++;

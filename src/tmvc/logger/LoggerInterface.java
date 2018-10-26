@@ -13,8 +13,6 @@ public interface LoggerInterface {
         void DBLog(String level,String message,String className,String methodName);
         // insert log in .txt file (checking the file size)
         void textLog(String level,String message,String className,String methodName);
-        // check current file size and if file is greater than the max file size in props,create another if size is > or =
-        boolean checkFileSize(File file);
         //call the socket method that will send the log to the console client
         void logToConsole(String level,String message,String className,String methodName);
 
