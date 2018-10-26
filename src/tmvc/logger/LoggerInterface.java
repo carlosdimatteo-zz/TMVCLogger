@@ -1,9 +1,10 @@
 package tmvc.logger;
-
+import javax.jws.WebService;
 import tmvc.DBUtils.Props;
 
 import java.io.File;
 
+@WebService
 public interface LoggerInterface {
         // public method ti be called by classes to create thread for the logger to run in background call getProps from
         // Props class (create method), checkProps and call methods accordingly
