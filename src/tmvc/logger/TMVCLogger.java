@@ -3,9 +3,12 @@ package tmvc.logger;
 import tmvc.DBUtils.DB;
 import tmvc.DBUtils.Props;
 
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -14,7 +17,7 @@ import javax.jws.WebService;
 
 @WebService(endpointInterface = "tmvc.logger.LoggerInterface")
 
-public class TMVCLogger implements LoggerInterface {
+public class TMVCLogger implements LoggerInterface,Runnable{
     private String path = "./../../../../";
     private String fileName = "Log";
     private int counter = 0;
@@ -82,6 +85,17 @@ public class TMVCLogger implements LoggerInterface {
     @Override
     public void logToConsole(String level,String message, String className, String methodName) {
 
+        try {
+            ServerSocket serverSocket = new ServerSocket(9999);
+            while(true) {
+                new ClientHandler(serverSocket.accept(),className,methodName,level,message).start();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     private String getCurrentFile(){
@@ -91,5 +105,9 @@ public class TMVCLogger implements LoggerInterface {
     }
 
 
+    @Override
+    public void run() {
+
+    }
 }
 
