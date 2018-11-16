@@ -23,5 +23,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="JAX-WS-Glassfish / JAX-WS 2.2 RI / Metro 1.X / JWSDP 2.2 (2)" level="application" />
+    <orderEntry type="library" name="postgresql-42.2.5" level="project" />
   </component>
 </module>

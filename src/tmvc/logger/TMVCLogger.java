@@ -18,26 +18,33 @@ import javax.jws.WebService;
 @WebService(endpointInterface = "tmvc.logger.LoggerInterface")
 
 public class TMVCLogger implements LoggerInterface,Runnable{
-    private String path = "./../../../../";
+    private String path = System.getProperty("user.dir");
     private String fileName = "Log";
     private int counter = 0;
 
     @Override
     public void log(String level,String message) {
-        HashMap<String,Boolean> props = Props.getLogPropsInstance().getLogPropMap();
+        Props props = Props.getLogPropsInstance();
+
+        HashMap<String,Boolean> propMap = props.getLogPropMap();
+        System.out.println("the size of the propMap is : "+propMap.size());
         StackTraceElement nameSource = Thread.currentThread().getStackTrace()[2];
         String className = nameSource.getClassName();
         String methodName = nameSource.getMethodName();
         System.out.println(" the class : "+className+"through the method"+methodName+" logged the following message : "
                 +message+" with level :"+level);
-        if(props.get(level)){
-            if(props.get("dbActive")){
+        System.out.println("the level is "+level+" and its value in the property file is : "+propMap.get(level));
+        if(propMap.get(level)){
+            if(propMap.get("dbActive")){
                 DBLog(level,message,className,methodName);
-            }else if(props.get("textFile")){
+            }
+            if(propMap.get("textFile")){
                 textLog(level,message,className,methodName);
-            }else if(props.get("echo")){
+            }
+            if(propMap.get("echo")){
                 logToConsole(level,message,className,methodName);
             }
+            System.out.println("this level is not active and will not log ");
         }
     }
 
@@ -49,15 +56,16 @@ public class TMVCLogger implements LoggerInterface,Runnable{
 
     @Override
     public void textLog(String level,String message, String className, String methodName) {
-        File logFile = new File(getCurrentFile());
+        File logFile = new File(getCurrentFilePath());
         if(!checkFileSize(logFile)) {
-            logFile = new File(getCurrentFile());
+            logFile = new File(getCurrentFilePath());
         }
         try {
             FileWriter fileWriter = new FileWriter(logFile);
             String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
-            fileWriter.write(timeStamp+"-- Class :"+className+"-- Method: "+methodName+" -- Level: "+level
-                    +"-- Message: "+message);
+            String logText ="fileLog :  "+timeStamp+"-- Class :"+className+"-- Method: "+methodName+" -- Level: "+level
+                    +"-- Message: "+message;
+            fileWriter.append(logText);
             fileWriter.flush();
             fileWriter.close();
         } catch (IOException e) {
@@ -66,11 +74,17 @@ public class TMVCLogger implements LoggerInterface,Runnable{
     }
 
     private boolean checkFileSize(File file) {
-        int size = Integer.parseInt(Props.getLogPropsInstance().getProp("fileSize"));
-        if(file.length() >= size){
+        Props props = Props.getLogPropsInstance();
+        System.out.println("the maximum file size is : "+props.getProp("fileSize"));
+        int maxFileSize = Integer.parseInt(props.getProp("fileSize"));
+        System.out.println("Current file : "+file.getAbsolutePath()+"and filename is "+file.getName());
+        if(file.length() >= maxFileSize){
             this.counter++;
-            File logFile = new File(getCurrentFile());
+            String path = getCurrentFilePath();
+            System.out.println("Current file Path is: "+path);
+            File logFile = new File(path);
             try {
+                System.out.println("creating new file");
                 logFile.createNewFile();
                 return false;
             } catch (IOException e) {
@@ -86,6 +100,7 @@ public class TMVCLogger implements LoggerInterface,Runnable{
     public void logToConsole(String level,String message, String className, String methodName) {
 
         try {
+            System.out.println("creando socket server");
             ServerSocket serverSocket = new ServerSocket(9999);
             while(true) {
                 new ClientHandler(serverSocket.accept(),className,methodName,level,message).start();
@@ -98,9 +113,9 @@ public class TMVCLogger implements LoggerInterface,Runnable{
 
     }
 
-    private String getCurrentFile(){
-        String name = this.counter>0 ? this.fileName+this.counter : "";
-        String path = this.path+name+".txt";
+    private String getCurrentFilePath(){
+        String name = this.counter>0 ? this.fileName+this.counter : this.fileName;
+        String path = this.path+"/"+name+".txt";
         return path;
     }
 

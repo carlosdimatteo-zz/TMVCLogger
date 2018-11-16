@@ -20,16 +20,20 @@ public class Props {
         properties = new Properties();
         FileInputStream is = new FileInputStream(path);
         properties.load(is);
+        setPropMap(properties,path);
 
     }
 
     private void setPropMap(Properties properties, String path) {
-        HashMap<String, Boolean> propMap = new HashMap<String, Boolean>();
         Set<String> propSet = properties.stringPropertyNames();
         for (String propKey : propSet) {
-            if (path == "./../../../../log.properties") {
-                if(propKey!="fileSize") {
-                    logPropMap.put(propKey, Boolean.parseBoolean(properties.getProperty(propKey)));
+            if (path.equals(System.getProperty("user.dir")+"/log.properties")) {
+                if(!propKey.equals("fileSize")) {
+                    Boolean propValue = Boolean.parseBoolean(properties.getProperty(propKey));
+                    System.out.println("property : "+propKey+" --- "+propValue);
+                    logPropMap.put(propKey, propValue);
+                }else {
+                    System.out.println("the max size is: " + properties.getProperty(propKey));
                 }
             } else {
 
@@ -40,14 +44,23 @@ public class Props {
     }
 
     public static Props getLogPropsInstance() {//method  for singleton instance requesting
-        if(logInstance==null) {
+        if(logInstance==null || logInstance.getProp("fileSize")==null) {
             try {
-                logInstance = new Props("./../../../../log.properties");
+                System.out.println("creating log props instance");
+                String path =System.getProperty("user.dir")+"/log.properties";
+                logInstance = new Props(path);
+                System.out.println("the max file size is : "+logInstance.getProp("fileSize"));
+                System.out.println(logInstance.toString());
+
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
             return logInstance;
         }else{
+
+            System.out.println("returning already created  log props instance");
+            System.out.println("the max file size is : "+logInstance.getProp("fileSize"));
             return logInstance;
         }
     }
@@ -55,7 +68,8 @@ public class Props {
     public static Props getDBPropsInstance() {//method  for singleton instance requesting
         if(DBInstance==null) {
             try {
-                DBInstance = new Props("./../../../../database.properties");
+
+                DBInstance = new Props(System.getProperty("user.dir")+"/database.properties");
             } catch (IOException e) {
                 e.printStackTrace();
             }

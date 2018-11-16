@@ -10,5 +10,6 @@ public class Main {
         Object implementor = new TMVCLogger();
         String address = "http://localhost:8080/WebService";
         Endpoint.publish(address, implementor);
+        System.out.println("running web service");
     }
 }

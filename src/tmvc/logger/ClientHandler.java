@@ -26,7 +26,7 @@ public class ClientHandler extends Thread {
 
     public void run() {
         try {
-
+            System.out.println("client connected");
             out = new PrintWriter(clientSocket.getOutputStream(), true);
             String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
             out.println(timeStamp + "-- Class :" + this.className + "-- Method: " + this.methodName + " -- Level: " + this.level

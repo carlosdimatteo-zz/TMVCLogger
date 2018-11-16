@@ -18,11 +18,12 @@ public class DB {
 
     protected DB() {
         try {
+            System.out.println("driver from properties : "+prop.getProp("driver"));
             Class.forName(prop.getProp("driver"));
             con = DriverManager.getConnection(prop.getProp("url"), prop.getProp("user"), prop.getProp("password"));
         } catch (ClassNotFoundException | SQLException e) {
             // TODO Auto-generated catch block
-            System.out.println("No se pudo generar la conexion a la base de datos error: \n" + e.getMessage());
+            e.printStackTrace();
         }
     }
 
