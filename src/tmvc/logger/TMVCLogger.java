@@ -21,6 +21,7 @@ public class TMVCLogger implements LoggerInterface,Runnable{
     private String path = System.getProperty("user.dir");
     private String fileName = "Log";
     private int counter = 0;
+    private ServerSocket serverSocket = null;
 
     @Override
     public void log(String level,String message) {
@@ -100,10 +101,13 @@ public class TMVCLogger implements LoggerInterface,Runnable{
     public void logToConsole(String level,String message, String className, String methodName) {
 
         try {
-            System.out.println("creando socket server");
-            ServerSocket serverSocket = new ServerSocket(9999);
+
+            if(this.serverSocket==null) {
+                System.out.println("creando socket server");
+                 this.serverSocket = new ServerSocket(9999);
+            }
             while(true) {
-                new ClientHandler(serverSocket.accept(),className,methodName,level,message).start();
+                new ClientHandler(this.serverSocket.accept(),className,methodName,level,message).start();
             }
 
         } catch (IOException e) {
